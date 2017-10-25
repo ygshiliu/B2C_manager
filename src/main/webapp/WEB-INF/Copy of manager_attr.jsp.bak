@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	
+	$(function(){
+		$.getJSON("${pageContext.request.contextPath }/js/json/class_1.js",function(data){
+			$.each(data,function(i,item){
+				$("#spu_class_1_select").append("<option value='"+item.id+"'>"+item.flmch1+"</option>");
+			})
+		})
+		
+		$("#spu_class_1_select").change(function(){
+			$("#spu_class_2_select").empty();
+			$.getJSON("${pageContext.request.contextPath }/js/json/class_2_"+this.value+".js",function(data){
+				$.each(data,function(i,item){
+					$("#spu_class_2_select").append("<option value='"+item.id+"'>"+item.flmch2+"</option>");
+				})
+			})
+			
+		})
+		$("#spu_class_2_select").change(function(){
+			$("#attr_inner").empty();
+			var flbh2_id = this.value;
+			var flbh2_name = $("#spu_class_2_select option:selected").text();
+			$.post("${pageContext.request.contextPath }/attr_class_2_select.do",{flbh2_id:flbh2_id,flbh2_name:flbh2_name},function(data){
+				//使用ajax+hmtl内嵌页方式
+					$("#attr_inner").html(data);
+			})
+			
+		})
+		
+	})
+	
+
+</script>
+</head>
+<body >
+	分类属性信息列表页面<br>
+	${msg}<br>
+	
+	<select id="spu_class_1_select" name="flbh1"></select>
+	<select id="spu_class_2_select" name="flbh2"></select>
+	<hr>
+	<div id="attr_inner"></div>
+	
+	
+</body>
+</html>
